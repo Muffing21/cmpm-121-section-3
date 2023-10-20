@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 
 import starfieldUrl from "/assets/starfield.png";
+import rocketUrl from "/assets/rocket.png";
 
 export default class Play extends Phaser.Scene {
   fire?: Phaser.Input.Keyboard.Key;
@@ -19,6 +20,7 @@ export default class Play extends Phaser.Scene {
 
   preload() {
     this.load.image("starfield", starfieldUrl);
+    this.load.image("rocket", rocketUrl);
   }
 
   #addKey(
@@ -42,6 +44,7 @@ export default class Play extends Phaser.Scene {
       )
       .setOrigin(0, 0);
 
+    // let rocket =  this.physics.add.sprite(0, 0, "rocket");
     this.spinner = this.add.rectangle(100, 100, 50, 50, 0x8e00b9);
     this.enemy = this.add.rectangle(100, 100, 50, 50, 0x8e00b9);
 
@@ -50,13 +53,15 @@ export default class Play extends Phaser.Scene {
 
   update(_timeMs: number, delta: number) {
     this.starfield!.tilePositionX -= 4;
-    this.enemy!.setPosition(-4);
+    this.enemy!.x -= 4;
 
     if (this.left!.isDown) {
       this.spinner!.rotation -= delta * this.rotationSpeed;
+      this.spinner!.x -= 4;
     }
     if (this.right!.isDown) {
       this.spinner!.rotation += delta * this.rotationSpeed;
+      this.spinner!.x += 4;
     }
 
     if (this.fire!.isDown) {
