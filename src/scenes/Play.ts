@@ -9,6 +9,7 @@ export default class Play extends Phaser.Scene {
 
   starfield?: Phaser.GameObjects.TileSprite;
   spinner?: Phaser.GameObjects.Shape;
+  enemy?: Phaser.GameObjects.Shape;
 
   rotationSpeed = Phaser.Math.PI2 / 1000; // radians per millisecond
 
@@ -41,11 +42,15 @@ export default class Play extends Phaser.Scene {
       )
       .setOrigin(0, 0);
 
-    this.spinner = this.add.rectangle(100, 100, 50, 50, 0xff0000);
+    this.spinner = this.add.rectangle(100, 100, 50, 50, 0x8e00b9);
+    this.enemy = this.add.rectangle(100, 100, 50, 50, 0x8e00b9);
+
+    // let cursors = this.spinner.input.keyboard.createCursorKeys();
   }
 
   update(_timeMs: number, delta: number) {
     this.starfield!.tilePositionX -= 4;
+    this.enemy!.setPosition(-4);
 
     if (this.left!.isDown) {
       this.spinner!.rotation -= delta * this.rotationSpeed;
@@ -62,5 +67,25 @@ export default class Play extends Phaser.Scene {
         ease: Phaser.Math.Easing.Sine.Out,
       });
     }
+
+    if (checkCollision(this.spinner!, this.enemy!)) {
+      console.log("check collosion");
+    }
+  }
+}
+
+function checkCollision(
+  rocket: Phaser.GameObjects.Shape,
+  ship: Phaser.GameObjects.Shape,
+) {
+  if (
+    rocket.x < ship.x + ship.width &&
+    rocket.x + rocket.width > ship.x &&
+    rocket.y < ship.y + ship.height &&
+    rocket.height + rocket.y > ship.y
+  ) {
+    return true;
+  } else {
+    return false;
   }
 }
